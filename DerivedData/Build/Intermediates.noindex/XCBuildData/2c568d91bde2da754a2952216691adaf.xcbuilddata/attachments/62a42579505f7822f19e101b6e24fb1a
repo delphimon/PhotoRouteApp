@@ -1,0 +1,119 @@
+{
+  "" : {
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRoute-primary.dia",
+    "emit-module-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRoute-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRoute-primary-emit-module.dia",
+    "pch" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRoute-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRoute-primary.swiftdeps"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Analysis/RouteSegmenter.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegmenter~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Analysis/TripAnalyzer.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalyzer~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Models/PhotoAlbum.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoAlbum~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Models/PhotoPoint.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoPoint~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Models/RouteSegment.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/RouteSegment~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Models/TripAnalysis.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/TripAnalysis~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/PhotoRouteApp.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoRouteApp~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Services/PhotoLibraryService.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/PhotoLibraryService~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Views/AlbumPickerView.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/AlbumPickerView~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Views/ContentView.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/ContentView~partial.swiftmodule"
+  },
+  "/Users/andrew/development/PhotoRouteApp/PhotoRoute/Views/MapScreenView.swift" : {
+    "const-values" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.swiftconstvalues",
+    "dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.d",
+    "diagnostics" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.dia",
+    "index-unit-output-path" : "/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.o",
+    "llvm-bc" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.bc",
+    "object" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.o",
+    "swift-dependencies" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView.swiftdeps",
+    "swiftmodule" : "/Users/andrew/development/PhotoRouteApp/DerivedData/Build/Intermediates.noindex/PhotoRoute.build/Debug-iphonesimulator/PhotoRoute.build/Objects-normal/x86_64/MapScreenView~partial.swiftmodule"
+  }
+}
