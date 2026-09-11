@@ -5,6 +5,7 @@ struct MapScreenView: View {
     let album: PhotoAlbum
     @StateObject private var analyzer = TripAnalyzer()
     @State private var selectedPoint: PhotoPoint?
+    @State private var cameraDistance: Double = 100000 // initial large value
     
     var body: some View {
         VStack(spacing: 0) {
@@ -23,14 +24,23 @@ struct MapScreenView: View {
                     
                     ForEach(analysis.points) { point in
                         Annotation("", coordinate: point.coordinate) {
-                            Circle()
-                                .fill(.red)
-                                .frame(width: 8, height: 8)
-                                .onTapGesture {
-                                    selectedPoint = point
+                            Group {
+                                if cameraDistance < 30000 {
+                                    PhotoThumbnailView(point: point)
+                                } else {
+                                    Circle()
+                                        .fill(.red)
+                                        .frame(width: 8, height: 8)
                                 }
+                            }
+                            .onTapGesture {
+                                selectedPoint = point
+                            }
                         }
                     }
+                }
+                .onMapCameraChange(frequency: .continuous) { context in
+                    cameraDistance = context.camera.distance
                 }
                 
                 VStack(spacing: 4) {
