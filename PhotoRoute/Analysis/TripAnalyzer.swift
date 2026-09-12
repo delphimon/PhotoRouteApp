@@ -1,89 +1,177 @@
 import Foundation
 import Photos
-import CoreLocation
+import Combine
 
+/// A MainActor observable class responsible for analyzing photo albums, extracting GPS data,
+/// parsing GPX tracks, and generating a `TripAnalysis` for the UI to consume.
 @MainActor
 class TripAnalyzer: ObservableObject {
-    @Published var isAnalyzing = false
-    @Published var totalCount = 0
-    @Published var analyzedCount = 0
+    /// The resulting analysis generated from the album and GPX track.
     @Published var analysis: TripAnalysis?
-    @Published var settings: SegmentationSettings = .default {
+    /// Indicates whether the analyzer is currently processing data.
+    @Published var isAnalyzing = false
+    /// The number of photos that have been processed so far.
+    @Published var analyzedCount = 0
+    /// The total number of photos in the album.
+    @Published var totalCount = 0
+    /// Settings used for segmentation and exclusion logic.
+    @Published var settings = SegmentationSettings() {
         didSet {
             recalculateSegments()
         }
     }
     
-    private var allExtractedPoints: [PhotoPoint] = []
+    private var rawPoints: [PhotoPoint] = []
+    private var rawGPXPoints: [GPXTrackPoint]? = nil
+    private var albumId: String = ""
     
-    func analyze(album: PhotoAlbum) async {
+    /// Analyzes a photo album, optionally integrating GPX track points for missing location interpolation.
+    func analyze(album: PhotoAlbum, gpxTrackPoints: [GPXTrackPoint]? = nil) async {
         isAnalyzing = true
+        self.albumId = album.id
+        self.rawGPXPoints = gpxTrackPoints
         
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        let assets = PHAsset.fetchAssets(in: album.collection, options: fetchOptions)
         
-        totalCount = assets.count
-        analyzedCount = 0
+        var fetchResult: PHFetchResult<PHAsset>? = nil
         
-        let extractedPoints = await Task.detached(priority: .userInitiated) {
-            var localPoints: [PhotoPoint] = []
-            for i in 0..<assets.count {
-                let asset = assets.object(at: i)
-                if let location = asset.location, let creationDate = asset.creationDate {
-                    // Try to get filename quickly
-                    var filename: String? = nil
-                    if let resource = PHAssetResource.assetResources(for: asset).first {
-                        filename = resource.originalFilename
-                    }
-                    
-                    let point = PhotoPoint(
-                        id: asset.localIdentifier,
-                        creationDate: creationDate,
-                        latitude: location.coordinate.latitude,
-                        longitude: location.coordinate.longitude,
-                        altitude: location.altitude,
-                        horizontalAccuracy: location.horizontalAccuracy,
-                        filename: filename,
-                        isVideo: asset.mediaType == .video
-                    )
-                    localPoints.append(point)
-                }
-            }
-            return localPoints
-        }.value
-        
-        analyzedCount = assets.count
-        allExtractedPoints = extractedPoints
-        recalculateSegments()
-        
-        isAnalyzing = false
-    }
-    
-    private func recalculateSegments() {
-        let segments = RouteSegmenter.segment(points: allExtractedPoints, settings: settings)
-        
-        var totalDistance = 0.0
-        var duration: TimeInterval = 0
-        
-        if let first = allExtractedPoints.first, let last = allExtractedPoints.last {
-            duration = last.creationDate.timeIntervalSince(first.creationDate)
-            
-            for i in 1..<allExtractedPoints.count {
-                let prev = allExtractedPoints[i-1]
-                let curr = allExtractedPoints[i]
-                let loc1 = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
-                let loc2 = CLLocation(latitude: curr.latitude, longitude: curr.longitude)
-                totalDistance += loc2.distance(from: loc1)
+        if let collection = album.collection {
+            fetchResult = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+        } else {
+            let collections = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [album.id], options: nil)
+            if let collection = collections.firstObject {
+                fetchResult = PHAsset.fetchAssets(in: collection, options: fetchOptions)
             }
         }
         
-        analysis = TripAnalysis(
-            points: allExtractedPoints,
-            segments: segments,
-            validPointCount: allExtractedPoints.count,
-            totalDistanceMeters: totalDistance,
-            duration: duration
+        guard let fetchResult = fetchResult else {
+            isAnalyzing = false
+            return
+        }
+        
+        self.totalCount = fetchResult.count
+        self.analyzedCount = 0
+        
+        let points = await processAssets(fetchResult, gpxPoints: gpxTrackPoints)
+        self.rawPoints = points
+        
+        await recalculateSegmentsAsync()
+    }
+    
+    func recalculateSegments() {
+        Task {
+            await recalculateSegmentsAsync()
+        }
+    }
+    
+    private func recalculateSegmentsAsync() async {
+        let activePoints = rawPoints.filter { 
+            !self.settings.excludedIds.contains($0.id) && 
+            ($0.coordinate.latitude != 0 || $0.coordinate.longitude != 0) 
+        }
+        let settings = self.settings
+        let gpx = self.rawGPXPoints
+        
+        // Run heavy calculations in background
+        let result = await Task.detached { () -> (segments: [RouteSegment], simplified: [GPXTrackPoint]?) in
+            let segments = RouteSegmenter.segment(points: activePoints, settings: settings)
+            
+            // Limit points passed to simplifier if it's too large, or increase tolerance
+            var tolerance = 5.0
+            if let count = gpx?.count, count > 10000 {
+                tolerance = 15.0 // Increase tolerance for massive tracks to speed up simplification
+            }
+            let simplified = gpx.map { RouteSimplifier.simplify($0, toleranceMeters: tolerance) }
+            
+            return (segments, simplified)
+        }.value
+        
+        self.analysis = TripAnalysis(
+            albumId: self.albumId,
+            points: activePoints,
+            segments: result.segments,
+            gpxTrackPoints: rawGPXPoints,
+            simplifiedGpxTrackPoints: result.simplified
         )
+        self.isAnalyzing = false
+    }
+    
+    func applyGPXTrack(_ trackPoints: [GPXTrackPoint]) async {
+        self.rawGPXPoints = trackPoints
+        let interpolator = RouteInterpolator(trackPoints: trackPoints)
+        
+        let updated = await Task.detached { [rawPoints] in
+            var updatedPoints = rawPoints
+            for i in 0..<updatedPoints.count {
+                if updatedPoints[i].altitude == nil || updatedPoints[i].coordinate.latitude == 0 {
+                    if let loc = interpolator.interpolateLocation(for: updatedPoints[i].creationDate) {
+                        let old = updatedPoints[i]
+                        updatedPoints[i] = PhotoPoint(
+                            id: old.id,
+                            coordinate: loc.coordinate,
+                            creationDate: old.creationDate,
+                            altitude: loc.altitude,
+                            filename: old.filename,
+                            horizontalAccuracy: old.horizontalAccuracy,
+                            isVideo: old.isVideo
+                        )
+                    }
+                }
+            }
+            return updatedPoints
+        }.value
+        
+        self.rawPoints = updated
+        await recalculateSegmentsAsync()
+    }
+    
+    private func processAssets(_ fetchResult: PHFetchResult<PHAsset>, gpxPoints: [GPXTrackPoint]?) async -> [PhotoPoint] {
+        return await Task.detached {
+            var points: [PhotoPoint] = []
+            let interpolator = gpxPoints.map { RouteInterpolator(trackPoints: $0) }
+            
+            for i in 0..<fetchResult.count {
+                if i % 50 == 0 {
+                    await MainActor.run {
+                        self.analyzedCount = i
+                    }
+                }
+                
+                let asset = fetchResult.object(at: i)
+                guard let creationDate = asset.creationDate else { continue }
+                
+                var coord: CLLocationCoordinate2D? = asset.location?.coordinate
+                var alt: Double? = asset.location?.altitude
+                
+                if coord == nil || (coord!.latitude == 0 && coord!.longitude == 0) {
+                    if let loc = interpolator?.interpolateLocation(for: creationDate) {
+                        coord = loc.coordinate
+                        alt = loc.altitude
+                    } else {
+                        // Keep the photo in rawPoints with a dummy coordinate so it can be interpolated later
+                        // if a GPX track is loaded. We will filter out (0,0) during segmentation.
+                        coord = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+                    }
+                }
+                
+                if let validCoord = coord {
+                    points.append(PhotoPoint(
+                        id: asset.localIdentifier,
+                        coordinate: validCoord,
+                        creationDate: creationDate,
+                        altitude: alt,
+                        filename: nil,
+                        horizontalAccuracy: asset.location?.horizontalAccuracy,
+                        isVideo: asset.mediaType == .video
+                    ))
+                }
+            }
+            
+            await MainActor.run {
+                self.analyzedCount = fetchResult.count
+            }
+            return points
+        }.value
     }
 }

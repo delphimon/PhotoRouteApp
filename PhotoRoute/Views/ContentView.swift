@@ -1,52 +1,84 @@
 import SwiftUI
 import Photos
+import SwiftData
+
+enum SidebarItem: Hashable {
+    case albums
+    case savedTrip(String)
+}
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var savedTrips: [SavedTrip]
+    
     @State private var authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+    @State private var selection: SidebarItem? = .albums
     
     var body: some View {
-        NavigationStack {
-            Group {
-                switch authorizationStatus {
-                case .authorized, .limited:
-                    AlbumPickerView()
-                case .notDetermined:
-                    VStack(spacing: 20) {
-                        Text("Build a Route From Photos")
-                            .font(.largeTitle)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                        
-                        Text("Choose a Photos album and PhotoRoute will use the time and location of your pictures to reconstruct your trip.")
-                            .multilineTextAlignment(.center)
-                            .padding()
-                        
-                        Button("Grant Access") {
-                            requestAccess()
+        Group {
+            if authorizationStatus == .authorized || authorizationStatus == .limited {
+                NavigationSplitView {
+                    List(selection: $selection) {
+                        Section("Photos") {
+                            NavigationLink(value: SidebarItem.albums) {
+                                Label("Photo Albums", systemImage: "photo.stack")
+                            }
                         }
-                        .buttonStyle(.borderedProminent)
-                        .padding()
+                        
+                        Section("Saved Trips") {
+                            if savedTrips.isEmpty {
+                                Text("No saved trips yet.")
+                                    .foregroundColor(.secondary)
+                            } else {
+                                ForEach(savedTrips) { trip in
+                                    NavigationLink(value: SidebarItem.savedTrip(trip.id)) {
+                                        Label(trip.title, systemImage: "map")
+                                    }
+                                }
+                            }
+                        }
                     }
-                case .denied, .restricted:
-                    VStack {
-                        Text("Photo Access Denied")
-                            .font(.title)
-                        Text("Please enable photo access in Settings to use PhotoRoute.")
-                            .multilineTextAlignment(.center)
-                            .padding()
+                    .navigationTitle("PhotoRoute")
+                } detail: {
+                    if let selection = selection {
+                        switch selection {
+                        case .albums:
+                            AlbumPickerView()
+                        case .savedTrip(let id):
+                            if let trip = savedTrips.first(where: { $0.id == id }) {
+                                // Dummy album for now, ideally we fetch the real album title and re-analyze
+                                let dummyAlbum = PhotoAlbum(id: trip.albumId, title: trip.title, assetCount: 0, collection: nil)
+                                MapScreenView(album: dummyAlbum, savedTrip: trip)
+                            }
+                        }
+                    } else {
+                        Text("Select an item")
+                            .foregroundColor(.secondary)
                     }
-                @unknown default:
-                    Text("Unknown authorization status")
                 }
-            }
-            .navigationTitle("PhotoRoute")
-        }
-    }
-    
-    private func requestAccess() {
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
-            DispatchQueue.main.async {
-                self.authorizationStatus = status
+            } else if authorizationStatus == .notDetermined {
+                VStack {
+                    Text("PhotoRoute needs access to your photos to reconstruct your trip.")
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    Button("Grant Access") {
+                        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+                            DispatchQueue.main.async {
+                                self.authorizationStatus = status
+                            }
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            } else {
+                VStack {
+                    Text("Photo access was denied. Please enable it in Settings.")
+                    Button("Open Settings") {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                }
             }
         }
     }

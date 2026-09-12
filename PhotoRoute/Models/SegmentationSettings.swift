@@ -13,6 +13,7 @@ struct SegmentationSettings: Equatable {
     var maxTimeGapHours: Double = 12.0
     var maxDistanceGapKilometers: Double = 25.0
     var maxSpeedKmh: Double = 60.0
+    var excludedIds: Set<String> = []
     
     static let `default` = SegmentationSettings()
 }

@@ -1,13 +1,17 @@
 import Foundation
 import CoreLocation
 
+/// Utility for splitting a contiguous list of `PhotoPoint`s into discrete `RouteSegment`s.
+/// Segments are broken when time or distance gaps exceed the configured thresholds.
 struct RouteSegmenter {
-    static func segment(points: [PhotoPoint], settings: SegmentationSettings = .default) -> [RouteSegment] {
+    
+    /// Segments an array of photo points.
+    /// - Parameters:
+    ///   - points: The chronological array of `PhotoPoint`s.
+    ///   - settings: The `SegmentationSettings` defining gap thresholds.
+    /// - Returns: An array of `RouteSegment`s.
+    static func segment(points: [PhotoPoint], settings: SegmentationSettings) -> [RouteSegment] {
         guard !points.isEmpty else { return [] }
-        
-        if settings.mode == .continuous {
-            return [RouteSegment(points: points)]
-        }
         
         var segments: [RouteSegment] = []
         var currentSegmentPoints: [PhotoPoint] = [points[0]]
@@ -16,38 +20,16 @@ struct RouteSegmenter {
             let prev = points[i-1]
             let curr = points[i]
             
-            let timeDiff = curr.creationDate.timeIntervalSince(prev.creationDate)
+            let timeGap = curr.creationDate.timeIntervalSince(prev.creationDate)
             
-            let loc1 = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
-            let loc2 = CLLocation(latitude: curr.latitude, longitude: curr.longitude)
-            let distanceMeters = loc2.distance(from: loc1)
-            let distanceKm = distanceMeters / 1000.0
+            let prevLoc = CLLocation(latitude: prev.coordinate.latitude, longitude: prev.coordinate.longitude)
+            let currLoc = CLLocation(latitude: curr.coordinate.latitude, longitude: curr.coordinate.longitude)
+            let distanceGap = currLoc.distance(from: prevLoc)
             
-            let hoursDiff = timeDiff / 3600.0
-            let impliedSpeedKmh = (hoursDiff > 0) ? (distanceKm / hoursDiff) : 0.0
+            let timeGapThreshold = settings.maxTimeGapHours * 3600
+            let distanceGapThreshold = settings.maxDistanceGapKilometers * 1000
             
-            var shouldSplit = false
-            
-            if settings.mode == .smart {
-                // Smart heuristics
-                let largeTimeGap = hoursDiff > 8.0 && distanceKm > 1.0
-                let largeDistanceJump = distanceKm > 30.0
-                let highSpeed = impliedSpeedKmh > 70.0 && distanceKm > 5.0
-                
-                if largeTimeGap || largeDistanceJump || highSpeed {
-                    shouldSplit = true
-                }
-            } else if settings.mode == .custom {
-                if hoursDiff > settings.maxTimeGapHours {
-                    shouldSplit = true
-                }
-                if distanceKm > settings.maxDistanceGapKilometers {
-                    shouldSplit = true
-                }
-                if impliedSpeedKmh > settings.maxSpeedKmh && distanceKm > 1.0 {
-                    shouldSplit = true
-                }
-            }
+            let shouldSplit = timeGap > timeGapThreshold || distanceGap > distanceGapThreshold
             
             if shouldSplit {
                 segments.append(RouteSegment(points: currentSegmentPoints))

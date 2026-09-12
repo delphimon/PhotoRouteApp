@@ -3,6 +3,9 @@ import Photos
 
 struct PhotoInspectionSheet: View {
     let point: PhotoPoint
+    var trip: SavedTrip?
+    @ObservedObject var analyzer: TripAnalyzer
+    
     @State private var thumbnail: UIImage?
     
     var body: some View {
@@ -33,6 +36,20 @@ struct PhotoInspectionSheet: View {
                     LabeledContent("Filename", value: fn)
                 }
                 LabeledContent("Type", value: point.isVideo ? "Video" : "Image")
+                
+                Toggle("Include in Route", isOn: Binding(
+                    get: { !analyzer.settings.excludedIds.contains(point.id) },
+                    set: { included in
+                        if included {
+                            analyzer.settings.excludedIds.remove(point.id)
+                        } else {
+                            analyzer.settings.excludedIds.insert(point.id)
+                        }
+                        if let trip = trip {
+                            trip.excludedAssetIds = Array(analyzer.settings.excludedIds)
+                        }
+                    }
+                ))
             }
             .padding()
             
@@ -51,7 +68,7 @@ struct PhotoInspectionSheet: View {
         
         let manager = PHImageManager.default()
         let options = PHImageRequestOptions()
-        options.isNetworkAccessAllowed = true // Allow iCloud download for thumbnail if needed
+        options.isNetworkAccessAllowed = true
         options.deliveryMode = .opportunistic
         
         manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: options) { image, _ in
