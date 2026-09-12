@@ -1,8 +1,14 @@
 import SwiftUI
 import Photos
 
+/// A view that asynchronously loads and displays a thumbnail for a given photo point.
+///
+/// Intended to be used as a map annotation marker.
 struct PhotoThumbnailView: View {
+    /// The photo point containing the asset identifier.
     let point: PhotoPoint
+    
+    /// The loaded image thumbnail, or nil if still loading.
     @State private var thumbnail: UIImage?
     
     var body: some View {

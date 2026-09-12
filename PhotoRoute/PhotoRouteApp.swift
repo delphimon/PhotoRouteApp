@@ -1,8 +1,10 @@
 import SwiftUI
 import SwiftData
 
+/// The main entry point for the PhotoRoute application.
 @main
 struct PhotoRouteApp: App {
+    /// The shared SwiftData model container used for persisting saved trips.
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             SavedTrip.self,

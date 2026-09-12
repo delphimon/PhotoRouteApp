@@ -1,11 +1,21 @@
 import SwiftUI
 import Photos
 
+/// A half-sheet view that displays detailed information about a selected photo point.
+///
+/// This view allows the user to inspect the exact timestamp, coordinates, and altitude
+/// of a photo, and provides an option to exclude the photo from the route analysis.
 struct PhotoInspectionSheet: View {
+    /// The photo point being inspected.
     let point: PhotoPoint
+    
+    /// The saved trip, used to persist exclusion settings if applicable.
     var trip: SavedTrip?
+    
+    /// The analyzer whose settings will be updated if the photo is excluded.
     @ObservedObject var analyzer: TripAnalyzer
     
+    /// The loaded image thumbnail for the photo.
     @State private var thumbnail: UIImage?
     
     var body: some View {

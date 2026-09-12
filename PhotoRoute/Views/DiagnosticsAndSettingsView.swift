@@ -1,7 +1,11 @@
 import SwiftUI
 
+/// A view that displays diagnostic information about the route and allows adjusting segmentation settings.
 struct DiagnosticsAndSettingsView: View {
+    /// The current segmentation settings, bound to the parent analyzer to re-trigger analysis on change.
     @Binding var settings: SegmentationSettings
+    
+    /// The current trip analysis used for displaying diagnostic readouts.
     let analysis: TripAnalysis
     
     var body: some View {

@@ -1,9 +1,16 @@
 import SwiftUI
 
+/// A view that provides UI controls for exporting the trip analysis data.
+///
+/// Supports exporting to GPX (track and waypoints) and CSV formats via the system share sheet.
 struct ExportView: View {
+    /// The completed trip analysis containing the route data.
     let analysis: TripAnalysis
+    
+    /// The title of the album, used to name the exported files.
     let albumTitle: String
     
+    /// User-configurable options for the GPX export.
     @State private var gpxOptions = GPXExportOptions()
     
     var body: some View {

@@ -2,11 +2,15 @@ import SwiftUI
 import Photos
 import SwiftData
 
+/// Represents an item selected in the sidebar navigation.
 enum SidebarItem: Hashable {
+    /// The main photo albums view.
     case albums
+    /// A specifically saved trip using its persistent identifier string.
     case savedTrip(String)
 }
 
+/// The root application view that handles Photos authorization and navigation structure.
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var savedTrips: [SavedTrip]

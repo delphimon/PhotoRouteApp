@@ -2,13 +2,19 @@ import SwiftUI
 import MapKit
 import SwiftData
 
+/// Represents a dynamically clustered group of photos for map rendering.
 struct PhotoCluster: Identifiable {
+    /// The unique grid-based ID for the cluster.
     let id: String
+    /// The map coordinate of the cluster (typically matching the first point).
     var coordinate: CLLocationCoordinate2D
+    /// The total number of photos grouped in this cluster.
     var count: Int
+    /// A representative photo point for the cluster, used for thumbnail display.
     var firstPoint: PhotoPoint
 }
 
+/// The main map interface for displaying the reconstructed photo route, clusters, and timeline scrubber.
 struct MapScreenView: View {
     let album: PhotoAlbum
     var savedTrip: SavedTrip? = nil
