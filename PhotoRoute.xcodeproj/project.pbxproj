@@ -18,6 +18,7 @@
 		3956FA78B7C7B3ABCCE0E85C /* CSVExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204233D5732747AF4A405394 /* CSVExporter.swift */; };
 		42BB8C2B0CE7D00C3FD48670 /* RouteSegmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08206396E5801D1E4D2FC7 /* RouteSegmenter.swift */; };
 		479F6DEC048A616C04A8E094 /* SegmentationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF08EA7C987E8F37B7F7385 /* SegmentationSettings.swift */; };
+		49761217309147B300E1E122 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 49761216309147B300E1E122 /* PrivacyInfo.xcprivacy */; };
 		5A5925CACBE78F8DBDDC372C /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F6C5502B3C4F2CD58BE5BF /* ExportView.swift */; };
 		6137C83F1DD529E75A9D8674 /* AlbumPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EE64183AE3A5C5E7D8739 /* AlbumPickerView.swift */; };
 		6EAB8F90A37CA3582B2E0DB4 /* GPXParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A154EF7762BD8313189D1D0 /* GPXParserTests.swift */; };
@@ -55,6 +56,7 @@
 		2D08206396E5801D1E4D2FC7 /* RouteSegmenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RouteSegmenter.swift; sourceTree = "<group>"; };
 		3596CA2438B48B685D695A0F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		41542612C9B1CF1AC6E326EB /* TripAnalyzer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripAnalyzer.swift; sourceTree = "<group>"; };
+		49761216309147B300E1E122 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		4E66A4A304A267D4ED30B5D1 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4F485F9BD9BCCDC1D65C83F7 /* TripAnalysis.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TripAnalysis.swift; sourceTree = "<group>"; };
 		556630F54C0B5971BAC443FA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -196,7 +198,6 @@
 			children = (
 				27A66695AD116FDD115DBCE9 /* SavedTrip.swift */,
 			);
-			name = Persistence;
 			path = Persistence;
 			sourceTree = "<group>";
 		};
@@ -214,6 +215,7 @@
 				78CA3A1496F83757940C45D5 /* Assets.xcassets */,
 				38ED8D6323DC2A1D231C7685 /* Assets.xcassets */,
 				D75747358295DB0B41E2A877 /* Persistence */,
+				49761216309147B300E1E122 /* PrivacyInfo.xcprivacy */,
 			);
 			path = PhotoRoute;
 			sourceTree = "<group>";
@@ -328,6 +330,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49761217309147B300E1E122 /* PrivacyInfo.xcprivacy in Resources */,
 				C74ADE9934376C48A580A2E2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -512,7 +515,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 65Q2FMW3ZX;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WF244Y4N2C;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = PhotoRoute/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Photo Route";
@@ -522,7 +526,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.adventureleader.PhotoRoute;
+				PRODUCT_BUNDLE_IDENTIFIER = org.adventureleader.photorouteapp;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -535,9 +539,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 65Q2FMW3ZX;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.PhotoRouteTests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.adventureleader.photorouteappTests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoRoute.app/PhotoRoute";
@@ -549,9 +555,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 65Q2FMW3ZX;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.PhotoRouteTests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.adventureleader.photorouteappTests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoRoute.app/PhotoRoute";
@@ -566,7 +574,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 65Q2FMW3ZX;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WF244Y4N2C;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = PhotoRoute/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Photo Route";
@@ -576,7 +585,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.adventureleader.PhotoRoute;
+				PRODUCT_BUNDLE_IDENTIFIER = org.adventureleader.photorouteapp;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

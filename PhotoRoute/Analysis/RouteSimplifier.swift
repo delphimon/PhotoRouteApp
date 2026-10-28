@@ -86,7 +86,9 @@ struct RouteSimplifier {
         let a13 = sin(dLat13/2)*sin(dLat13/2) + cos(lat1)*cos(lat3)*sin(dLon13/2)*sin(dLon13/2)
         let d13 = 2 * atan2(sqrt(a13), sqrt(1-a13)) // angular distance
         
-        let dxt = asin(sin(d13) * sin(bearing13 - bearing12))
+        let sinDxt = sin(d13) * sin(bearing13 - bearing12)
+        let clampedSinDxt = max(-1.0, min(1.0, sinDxt))
+        let dxt = asin(clampedSinDxt)
         return abs(dxt * R)
     }
 }

@@ -16,6 +16,8 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>PhotoRoute uses your photo dates and locations to reconstruct trips. Your photos and location data remain on this device.</string>
 	<key>UILaunchScreen</key>

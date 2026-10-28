@@ -27,6 +27,18 @@ class GPXParser: NSObject, XMLParserDelegate {
     private var currentElement: String = ""
     private var isInsideTrkpt = false
     
+    private static let standardDateFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime]
+        return f
+    }()
+    
+    private static let fractionalDateFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return f
+    }()
+    
     /// Parses GPX data into an array of track points.
     /// - Parameter data: The raw XML `Data` of the GPX file.
     /// - Returns: An array of `GPXTrackPoint`s, sorted chronologically.
@@ -67,8 +79,8 @@ class GPXParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "trkpt" {
             if let lat = currentLat, let lon = currentLon {
-                let formatter = ISO8601DateFormatter()
-                if let date = formatter.date(from: currentTimeStr.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                let trimmed = currentTimeStr.trimmingCharacters(in: .whitespacesAndNewlines)
+                if let date = Self.standardDateFormatter.date(from: trimmed) ?? Self.fractionalDateFormatter.date(from: trimmed) {
                     let pt = GPXTrackPoint(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon), altitude: currentEle, time: date)
                     trackPoints.append(pt)
                 }

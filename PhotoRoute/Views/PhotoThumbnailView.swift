@@ -10,6 +10,7 @@ struct PhotoThumbnailView: View {
     
     /// The loaded image thumbnail, or nil if still loading.
     @State private var thumbnail: UIImage?
+    @State private var requestId: PHImageRequestID?
     
     var body: some View {
         Group {
@@ -38,6 +39,11 @@ struct PhotoThumbnailView: View {
         .task {
             loadThumbnail()
         }
+        .onDisappear {
+            if let id = requestId {
+                PHImageManager.default().cancelImageRequest(id)
+            }
+        }
     }
     
     private func loadThumbnail() {
@@ -50,7 +56,7 @@ struct PhotoThumbnailView: View {
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .fastFormat // Use fast format for map markers
         
-        manager.requestImage(for: asset, targetSize: CGSize(width: 120, height: 120), contentMode: .aspectFill, options: options) { image, _ in
+        requestId = manager.requestImage(for: asset, targetSize: CGSize(width: 120, height: 120), contentMode: .aspectFill, options: options) { image, _ in
             if let img = image {
                 DispatchQueue.main.async {
                     self.thumbnail = img

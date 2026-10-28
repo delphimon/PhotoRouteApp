@@ -1,17 +1,52 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
-/// A view that provides UI controls for exporting the trip analysis data.
-///
-/// Supports exporting to GPX (track and waypoints) and CSV formats via the system share sheet.
-struct ExportView: View {
-    /// The completed trip analysis containing the route data.
-    let analysis: TripAnalysis
+extension UTType {
+    static var gpx: UTType {
+        UTType(filenameExtension: "gpx") ?? .xml
+    }
+}
+
+/// A transferable representation of a generated GPX file with appropriate UTType and suggested filename.
+struct ExportedGPXFile: Transferable {
+    let gpxString: String
+    let filename: String
     
-    /// The title of the album, used to name the exported files.
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(exportedContentType: .gpx) { file in
+            file.gpxString.data(using: .utf8) ?? Data()
+        }
+        .suggestedFileName { file in
+            "\(file.filename).gpx"
+        }
+    }
+}
+
+/// A transferable representation of a generated CSV file with appropriate UTType and suggested filename.
+struct ExportedCSVFile: Transferable {
+    let csvString: String
+    let filename: String
+    
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(exportedContentType: .commaSeparatedText) { file in
+            file.csvString.data(using: .utf8) ?? Data()
+        }
+        .suggestedFileName { file in
+            "\(file.filename).csv"
+        }
+    }
+}
+
+struct ExportView: View {
+    let analysis: TripAnalysis
     let albumTitle: String
     
-    /// User-configurable options for the GPX export.
     @State private var gpxOptions = GPXExportOptions()
+    
+    private var sanitizedTitle: String {
+        let clean = albumTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        return clean.isEmpty ? "Trip" : clean.replacingOccurrences(of: "/", with: "-")
+    }
     
     var body: some View {
         Form {
@@ -19,48 +54,29 @@ struct ExportView: View {
                 Toggle("Include Track", isOn: $gpxOptions.includeTrack)
                 Toggle("Include Photo Waypoints", isOn: $gpxOptions.includeWaypoints)
                 
-                let gpxString = GPXExporter.generateGPX(analysis: analysis, title: albumTitle, options: gpxOptions)
-                if let data = gpxString.data(using: .utf8) {
-                    ShareLink(
-                        item: CSVFile(data: data, filename: "\(sanitizedTitle).gpx", contentType: .xml),
-                        preview: SharePreview("\(albumTitle) GPX")
-                    ) {
-                        Label("Export GPX", systemImage: "square.and.arrow.up")
-                    }
+                ShareLink(
+                    item: ExportedGPXFile(
+                        gpxString: GPXExporter.generateGPX(analysis: analysis, title: albumTitle, options: gpxOptions),
+                        filename: sanitizedTitle
+                    ),
+                    preview: SharePreview("\(albumTitle) GPX")
+                ) {
+                    Label("Export GPX", systemImage: "square.and.arrow.up")
                 }
             }
             
             Section("CSV Export") {
-                let csvString = CSVExporter.generateCSV(analysis: analysis)
-                if let data = csvString.data(using: .utf8) {
-                    ShareLink(
-                        item: CSVFile(data: data, filename: "\(sanitizedTitle).csv", contentType: .commaSeparatedText),
-                        preview: SharePreview("\(albumTitle) CSV")
-                    ) {
-                        Label("Export CSV", systemImage: "tablecells")
-                    }
+                ShareLink(
+                    item: ExportedCSVFile(
+                        csvString: CSVExporter.generateCSV(analysis: analysis),
+                        filename: sanitizedTitle
+                    ),
+                    preview: SharePreview("\(albumTitle) CSV")
+                ) {
+                    Label("Export CSV", systemImage: "tablecells")
                 }
             }
         }
         .navigationTitle("Export")
-    }
-    
-    var sanitizedTitle: String {
-        let invalidCharacters = CharacterSet(charactersIn: "\\/:*?\"<>| ")
-        return albumTitle.components(separatedBy: invalidCharacters).joined(separator: "-")
-    }
-}
-
-import UniformTypeIdentifiers
-
-struct CSVFile: Transferable {
-    let data: Data
-    let filename: String
-    let contentType: UTType
-    
-    static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .data) { file in
-            file.data
-        }
     }
 }

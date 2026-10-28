@@ -1,6 +1,7 @@
 import SwiftUI
 import MapKit
 import SwiftData
+import UniformTypeIdentifiers
 
 /// Represents a dynamically clustered group of photos for map rendering.
 struct PhotoCluster: Identifiable {
@@ -18,6 +19,7 @@ struct PhotoCluster: Identifiable {
 struct MapScreenView: View {
     let album: PhotoAlbum
     var savedTrip: SavedTrip? = nil
+    @State private var currentSavedTrip: SavedTrip? = nil
     
     @Environment(\.modelContext) private var modelContext
     @StateObject private var analyzer = TripAnalyzer()
@@ -41,17 +43,22 @@ struct MapScreenView: View {
         }
     }
     
-    private var dynamicClusters: [PhotoCluster] {
-        guard let points = analyzer.analysis?.points, !points.isEmpty else { return [] }
+    @State private var dynamicClusters: [PhotoCluster] = []
+    
+    private func updateClusters(distance: Double) {
+        guard let points = analyzer.analysis?.points, !points.isEmpty else {
+            dynamicClusters = []
+            return
+        }
         
         let gridSize: Double
-        if cameraDistance < 2000 {
+        if distance < 2000 {
             gridSize = 0.00005
-        } else if cameraDistance < 10000 {
+        } else if distance < 10000 {
             gridSize = 0.0002
-        } else if cameraDistance < 50000 {
+        } else if distance < 50000 {
             gridSize = 0.001
-        } else if cameraDistance < 200000 {
+        } else if distance < 200000 {
             gridSize = 0.005
         } else {
             gridSize = 0.02
@@ -59,19 +66,25 @@ struct MapScreenView: View {
         
         var grid: [String: PhotoCluster] = [:]
         for p in points {
-            let gridX = Int(p.latitude / gridSize)
-            let gridY = Int(p.longitude / gridSize)
-            let key = "\(gridX)_\(gridY)"
+            let gridX = Int(p.coordinate.latitude / gridSize)
+            let gridY = Int(p.coordinate.longitude / gridSize)
+            let key = "\(gridX),\(gridY)"
             
-            if var existing = grid[key] {
-                existing.count += 1
-                grid[key] = existing
+            if grid[key] != nil {
+                grid[key]!.count += 1
             } else {
-                let cluster = PhotoCluster(id: key, coordinate: p.coordinate, count: 1, firstPoint: p)
-                grid[key] = cluster
+                let centerLat = Double(gridX) * gridSize + (gridSize / 2)
+                let centerLon = Double(gridY) * gridSize + (gridSize / 2)
+                grid[key] = PhotoCluster(
+                    id: key,
+                    coordinate: CLLocationCoordinate2D(latitude: centerLat, longitude: centerLon),
+                    count: 1,
+                    firstPoint: p
+                )
             }
         }
-        return Array(grid.values)
+        
+        dynamicClusters = Array(grid.values)
     }
     
     @MapContentBuilder
@@ -133,62 +146,87 @@ struct MapScreenView: View {
                     Spacer()
                 }
             } else if let analysis = analyzer.analysis {
-                Map(position: $mapCameraPosition) {
-                    routeContent
-                    annotationContent
-                    scrubberContent
-                }
-                .mapStyle(computedMapStyle)
-                .mapControls {
-                    MapCompass()
-                    MapPitchToggle()
-                    MapUserLocationButton()
-                    MapScaleView()
-                }
-                .onMapCameraChange(frequency: .continuous) { context in
-                    cameraDistance = context.camera.distance
-                }
-                
-                // Timeline Scrubber
-                if let first = analysis.points.first?.creationDate, let last = analysis.points.last?.creationDate, first < last {
-                    VStack(spacing: 4) {
-                        if let time = scrubTime {
-                            let date = Date(timeIntervalSince1970: time)
-                            Text(date.formatted())
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                if analysis.validPointCount == 0 {
+                    ContentUnavailableView {
+                        Label("No GPS Data Found", systemImage: "location.slash")
+                    } description: {
+                        Text("None of the photos in \"\(album.title)\" contain GPS coordinates. You can load a GPX track file to match photo timestamps with locations.")
+                    } actions: {
+                        Button("Load GPX Tracker") {
+                            isImportingGPX = true
                         }
-                        
-                        Slider(
-                            value: Binding(
-                                get: { scrubTime ?? first.timeIntervalSince1970 },
-                                set: { newValue in
-                                    scrubTime = newValue
-                                    let date = Date(timeIntervalSince1970: newValue)
-                                    if let loc = analysis.timelineInterpolator?.interpolateLocation(for: date) {
-                                        mapCameraPosition = .camera(MapCamera(centerCoordinate: loc.coordinate, distance: 5000, pitch: is3D ? 60 : 0))
-                                    }
-                                }
-                            ),
-                            in: first.timeIntervalSince1970...last.timeIntervalSince1970,
-                            onEditingChanged: { editing in
-                                isScrubbing = editing
-                            }
-                        )
+                        .buttonStyle(.borderedProminent)
                     }
-                    .padding()
+                } else {
+                    Map(position: $mapCameraPosition) {
+                        routeContent
+                        annotationContent
+                        scrubberContent
+                    }
+                    .mapStyle(computedMapStyle)
+                    .mapControls {
+                        MapCompass()
+                        MapPitchToggle()
+                        MapScaleView()
+                    }
+                    .onMapCameraChange(frequency: .onEnd) { context in
+                        cameraDistance = context.camera.distance
+                        updateClusters(distance: context.camera.distance)
+                    }
+                    .onChange(of: analyzer.analysis?.points.count) { _, _ in
+                        updateClusters(distance: cameraDistance)
+                    }
+                    
+                    // Timeline Scrubber
+                    if let first = analysis.points.first?.creationDate, let last = analysis.points.last?.creationDate, first < last {
+                        VStack(spacing: 4) {
+                            if let time = scrubTime {
+                                let date = Date(timeIntervalSince1970: time)
+                                Text(date.formatted())
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Slider(
+                                value: Binding(
+                                    get: { scrubTime ?? first.timeIntervalSince1970 },
+                                    set: { newValue in
+                                        scrubTime = newValue
+                                        let date = Date(timeIntervalSince1970: newValue)
+                                        if let loc = analysis.timelineInterpolator?.interpolateLocation(for: date) {
+                                            mapCameraPosition = .camera(MapCamera(centerCoordinate: loc.coordinate, distance: 5000, pitch: is3D ? 60 : 0))
+                                        }
+                                    }
+                                ),
+                                in: first.timeIntervalSince1970...last.timeIntervalSince1970,
+                                onEditingChanged: { editing in
+                                    isScrubbing = editing
+                                }
+                            )
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                    }
+                    
+                    VStack(spacing: 4) {
+                        Text("\(analysis.validPointCount) GPS photos")
+                            .font(.headline)
+                        Text(String(format: "%.1f mi point-to-point", analysis.totalDistanceMiles))
+                        Text(analysis.durationString)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
                     .background(Color(.systemBackground))
                 }
-                
-                VStack(spacing: 4) {
-                    Text("\(analysis.validPointCount) GPS photos")
-                        .font(.headline)
-                    Text(String(format: "%.1f mi point-to-point", analysis.totalDistanceMiles))
-                    Text(analysis.durationString)
+            } else if let error = analyzer.errorMessage {
+                VStack(spacing: 16) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                    Text(error)
+                        .multilineTextAlignment(.center)
+                        .padding()
                 }
-                .padding(.horizontal)
-                .padding(.bottom)
-                .background(Color(.systemBackground))
             } else {
                 Text("Failed to analyze trip")
             }
@@ -198,10 +236,11 @@ struct MapScreenView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    if savedTrip == nil {
+                    if currentSavedTrip == nil && savedTrip == nil {
                         Button("Save Trip") {
                             let newTrip = SavedTrip(albumId: album.id, title: album.title)
                             modelContext.insert(newTrip)
+                            currentSavedTrip = newTrip
                         }
                     }
                     
@@ -237,20 +276,27 @@ struct MapScreenView: View {
             }
         }
         .task {
+            if currentSavedTrip == nil {
+                currentSavedTrip = savedTrip
+            }
+            let activeTrip = currentSavedTrip ?? savedTrip
             var pts: [GPXTrackPoint]? = nil
-            if let data = savedTrip?.gpxData {
+            if let data = activeTrip?.gpxData {
                 pts = GPXParser().parse(data: data)
             }
-            if let excluded = savedTrip?.excludedAssetIds {
+            if let excluded = activeTrip?.excludedAssetIds {
                 analyzer.settings.excludedIds = Set(excluded)
             }
             await analyzer.analyze(album: album, gpxTrackPoints: pts)
         }
         .sheet(item: $selectedPoint) { point in
-            PhotoInspectionSheet(point: point, trip: savedTrip, analyzer: analyzer)
+            PhotoInspectionSheet(point: point, trip: currentSavedTrip ?? savedTrip, analyzer: analyzer)
                 .presentationDetents([.medium, .large])
         }
-        .fileImporter(isPresented: $isImportingGPX, allowedContentTypes: [.xml]) { result in
+        .fileImporter(
+            isPresented: $isImportingGPX,
+            allowedContentTypes: [UTType(filenameExtension: "gpx") ?? .xml, .xml]
+        ) { result in
             do {
                 let url = try result.get()
                 if url.startAccessingSecurityScopedResource() {
@@ -258,7 +304,7 @@ struct MapScreenView: View {
                     let parser = GPXParser()
                     let trackPoints = parser.parse(data: data)
                     
-                    if let trip = savedTrip {
+                    if let trip = currentSavedTrip ?? savedTrip {
                         trip.gpxData = data
                     }
                     

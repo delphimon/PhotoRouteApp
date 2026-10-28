@@ -14,7 +14,13 @@ struct PhotoRouteApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            print("Failed to initialize persistent ModelContainer: \(error). Falling back to in-memory container.")
+            let memoryConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            do {
+                return try ModelContainer(for: schema, configurations: [memoryConfig])
+            } catch {
+                fatalError("Fatal: Unable to create even an in-memory ModelContainer: \(error)")
+            }
         }
     }()
 

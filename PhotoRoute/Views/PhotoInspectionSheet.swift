@@ -17,6 +17,7 @@ struct PhotoInspectionSheet: View {
     
     /// The loaded image thumbnail for the photo.
     @State private var thumbnail: UIImage?
+    @State private var hasFailedLoadingImage = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -26,6 +27,20 @@ struct PhotoInspectionSheet: View {
                     .scaledToFit()
                     .frame(maxHeight: 200)
                     .cornerRadius(8)
+            } else if hasFailedLoadingImage {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.secondary.opacity(0.15))
+                    .frame(height: 180)
+                    .overlay(
+                        VStack(spacing: 8) {
+                            Image(systemName: point.isVideo ? "video.slash" : "photo")
+                                .font(.largeTitle)
+                                .foregroundColor(.secondary)
+                            Text("Preview Unavailable")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    )
             } else {
                 Rectangle()
                     .fill(Color.secondary.opacity(0.2))
@@ -74,17 +89,24 @@ struct PhotoInspectionSheet: View {
     private func loadThumbnail() {
         let fetchOptions = PHFetchOptions()
         let assets = PHAsset.fetchAssets(withLocalIdentifiers: [point.id], options: fetchOptions)
-        guard let asset = assets.firstObject else { return }
+        guard let asset = assets.firstObject else {
+            hasFailedLoadingImage = true
+            return
+        }
         
         let manager = PHImageManager.default()
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .opportunistic
         
-        manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: options) { image, _ in
+        manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: options) { image, info in
             if let img = image {
                 DispatchQueue.main.async {
                     self.thumbnail = img
+                }
+            } else if let isDegraded = info?[PHImageResultIsDegradedKey] as? Bool, !isDegraded {
+                DispatchQueue.main.async {
+                    self.hasFailedLoadingImage = true
                 }
             }
         }

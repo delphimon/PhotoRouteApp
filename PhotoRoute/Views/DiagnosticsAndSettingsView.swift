@@ -51,6 +51,10 @@ struct DiagnosticsAndSettingsView: View {
                     }
                 }
             }
+            
+            Section("Privacy") {
+                Link("Privacy Policy", destination: URL(string: "https://adventureleader.org/privacy")!)
+            }
         }
         .navigationTitle("Diagnostics & Settings")
         .navigationBarTitleDisplayMode(.inline)

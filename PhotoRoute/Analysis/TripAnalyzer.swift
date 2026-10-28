@@ -21,6 +21,9 @@ class TripAnalyzer: ObservableObject {
         }
     }
     
+    /// Error message if analysis fails.
+    @Published var errorMessage: String?
+    
     private var rawPoints: [PhotoPoint] = []
     private var rawGPXPoints: [GPXTrackPoint]? = nil
     private var albumId: String = ""
@@ -28,6 +31,7 @@ class TripAnalyzer: ObservableObject {
     /// Analyzes a photo album, optionally integrating GPX track points for missing location interpolation.
     func analyze(album: PhotoAlbum, gpxTrackPoints: [GPXTrackPoint]? = nil) async {
         isAnalyzing = true
+        errorMessage = nil
         self.albumId = album.id
         self.rawGPXPoints = gpxTrackPoints
         
@@ -45,8 +49,9 @@ class TripAnalyzer: ObservableObject {
             }
         }
         
-        guard let fetchResult = fetchResult else {
+        guard let fetchResult = fetchResult, fetchResult.count > 0 else {
             isAnalyzing = false
+            errorMessage = "This album could not be found or contains no photos. It may have been deleted from your Photos app."
             return
         }
         
@@ -155,13 +160,16 @@ class TripAnalyzer: ObservableObject {
                     }
                 }
                 
+                let resources = PHAssetResource.assetResources(for: asset)
+                let filename = resources.first?.originalFilename
+                
                 if let validCoord = coord {
                     points.append(PhotoPoint(
                         id: asset.localIdentifier,
                         coordinate: validCoord,
                         creationDate: creationDate,
                         altitude: alt,
-                        filename: nil,
+                        filename: filename,
                         horizontalAccuracy: asset.location?.horizontalAccuracy,
                         isVideo: asset.mediaType == .video
                     ))
